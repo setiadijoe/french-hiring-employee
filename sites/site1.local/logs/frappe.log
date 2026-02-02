@@ -1,0 +1,9 @@
+2026-01-22 14:57:35,013 ERROR frappe New Exception collected with id: 2026-01-22 14:57:34.943245-127.0.0.1-6a7
+Site: site1.local
+Form Dict: {'user': 'hiringmanager@mail.com', 'cmd': 'frappe.core.doctype.user.user.reset_password'}
+2026-01-22 15:51:30,585 ERROR frappe New Exception collected with id: 2026-01-22 15:51:30.473677-127.0.0.1-db6
+Site: site1.local
+Form Dict: {'doc': '{"name":"arifbrata@mail.com","owner":"Administrator","creation":"2026-01-22 15:15:23.301922","modified":"2026-01-22 15:15:23.301922","modified_by":"Administrator","docstatus":0,"idx":0,"workflow_state":"Open","applicant_name":"Arif Brata","email_id":"arifbrata@mail.com","phone_number":"0883768247492","country":"Indonesia","job_title":"junior-developer","designation":"Software Developer","status":"Open","source":"Campaign","applicant_rating":1,"currency":"IDR","lower_range":8000000,"upper_range":10000000,"doctype":"Job Applicant","__last_sync_on":"2026-01-22T08:51:17.632Z"}', 'cmd': 'hrms.hr.doctype.job_applicant.job_applicant.create_interview'}
+2026-01-23 16:51:23,748 ERROR frappe New Exception collected with id: 2026-01-23 16:51:23.465603-127.0.0.1-4df
+Site: site1.local
+Form Dict: {}

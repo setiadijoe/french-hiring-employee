@@ -1,0 +1,7 @@
+_HiStOrY_V2_
+DELETE\040FROM\040`tabModule\040Def`\040WHERE\040`module_name`\040=\040'HR'\040AND\040`app_name`\040=\040'hrms';
+exit;
+DELETE\040FROM\040`tabModule\040Def`\040WHERE\040`module_name`\040=\040'Payroll'\040AND\040`app_name`\040=\040'hrms';
+SELECT\040module_name\040FROM\040`tabModule\040Def`\040WHERE\040`app_name`\040=\040'hrms';
+DELETE\040FROM\040`tabModule\040Def`\040WHERE\040`module_name`\040=\040'Leave'\040AND\040`app_name`\040=\040'hrms';
+exit;

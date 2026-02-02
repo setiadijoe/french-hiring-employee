@@ -1,0 +1,1564 @@
+2026-01-26 15:12:16,605 INFO ipython === bench console session ===
+2026-01-26 15:12:16,606 INFO ipython import frappe
+2026-01-26 15:12:16,606 INFO ipython print("Doctypes:", frappe.db.get_list("DocType", filters={"modules": "Hiring Employee"}))
+2026-01-26 15:12:16,606 INFO ipython print("Doctypes:", frappe.db.get_list("DocType", filters={"module": "Hiring Employee"}))
+2026-01-26 15:12:16,606 INFO ipython print("Roles:", frappe.db.get_list("Role", filters={"name": ["in", ["Hiring Admin", "HR Interviewer", "HR Manager"]]}))
+2026-01-26 15:12:16,606 INFO ipython print("Doctypes:", frappe.db.get_list("DocType", filters={"module": "Hiring Employee"}))
+2026-01-26 15:12:16,606 INFO ipython modules = frappe.db.get_list("DocType", 
+    fields=["DISTINCT module as module"],
+    order_by="module"
+)
+print("Semua module yang ada di system:")
+for m in modules:
+    print(f"  - {m.module}")
+    
+2026-01-26 15:12:16,606 INFO ipython exit;
+2026-01-26 15:12:16,606 INFO ipython === session end ===
+2026-01-26 15:28:35,737 INFO ipython === bench console session ===
+2026-01-26 15:28:35,737 INFO ipython import frappe
+2026-01-26 15:28:35,737 INFO ipython module_exists = frappe.db.exists("Module Def", "Hiring Employee")
+print(f"Module 'Hiring Employee' exists: {module_exists}")
+2026-01-26 15:28:35,737 INFO ipython tables = frappe.db.sql("SHOW TABLES LIKE 'tabCandidate%'")
+print(f"Tabel Candidate: {tables}")
+2026-01-26 15:28:35,737 INFO ipython all_doctypes = frappe.get_all("DocType", 
+    fields=["name", "module", "custom"],
+    limit=10
+)
+print("\n10 Doctype terakhir:")
+for d in all_doctypes:
+    print(f"  {d.name:30} | {d.module:20} | custom: {d.custom}")
+    
+2026-01-26 15:28:35,737 INFO ipython === session end ===
+2026-01-26 15:30:03,518 INFO ipython === bench console session ===
+2026-01-26 15:30:03,518 INFO ipython import frappe
+2026-01-26 15:30:03,518 INFO ipython doctypes_to_fix = [
+    "Candidate", 
+    "HR Interview",
+    "HR Manager Interview"
+]
+2026-01-26 15:30:03,518 INFO ipython for doctype_name in doctypes_to_fix:
+    try:
+        # Ambil doctype dari database
+        doctype = frappe.get_doc("DocType", doctype_name)
+        
+        # Simpan module lama untuk log
+        old_module = doctype.module
+        
+        # Update module name
+        doctype.module = "Hiring Employee"
+        
+        # Save perubahan
+        doctype.save()
+        
+        print(f"✓ {doctype_name}: Diubah dari '{old_module}' ke 'Hiring Employee'")
+        
+    except Exception as e:
+        print(f"✗ Gagal update {doctype_name}: {str(e)}")
+
+print("\n✅ Selesai! Sekarang migrate untuk apply perubahan...")
+2026-01-26 15:30:03,518 INFO ipython exit;
+2026-01-26 15:30:03,518 INFO ipython === session end ===
+2026-01-26 15:32:05,000 INFO ipython === bench console session ===
+2026-01-26 15:32:05,001 INFO ipython import frappe
+2026-01-26 15:32:05,001 INFO ipython doctypes = frappe.get_all("DocType", 
+    filters={"module": "Hiring Employee"},
+    fields=["name", "module"]
+)
+2026-01-26 15:32:05,001 INFO ipython print(f"Total {len(doctypes)} doctype di module 'Hiring Employee':")
+for d in doctypes:
+    print(f"  - {d.name}")
+    
+2026-01-26 15:32:05,001 INFO ipython exit;
+2026-01-26 15:32:05,001 INFO ipython === session end ===
+2026-01-26 15:40:16,736 INFO ipython === bench console session ===
+2026-01-26 15:40:16,736 INFO ipython import frappe
+2026-01-26 15:40:16,736 INFO ipython keywords = ['candidate', 'interview', 'education']
+all_doctypes = frappe.get_all('DocType', 
+    fields=['name', 'module', 'custom'],
+    filters={'name': ['like', '%candidate%']}  # Cari berdasarkan nama
+)
+2026-01-26 15:40:16,736 INFO ipython print("Doctype yang ditemukan:")
+2026-01-26 15:40:16,736 INFO ipython for dt in all_doctypes:
+    if any(keyword in dt.name.lower() for keyword in keywords):
+        print(f"  - {dt.name:30} | Module: {dt.module:20} | Custom: {dt.custom}")
+        
+2026-01-26 15:40:16,736 INFO ipython for name in ['HR Interview', 'HR Manager Interview', 'Candidate Education']:
+    if frappe.db.exists('DocType', name):
+        doc = frappe.get_doc('DocType', name)
+        print(f"\n{name}:")
+        print(f"  Module: {doc.module}")
+        print(f"  Custom: {doc.custom}")
+        print(f"  Is Single: {doc.issingle}")
+    else:
+        print(f"\n{name}: TIDAK DITEMUKAN di database!")
+        
+2026-01-26 15:40:16,737 INFO ipython doctypes_to_move = ['HR Interview', 'HR Manager Interview', 'Candidate Education']
+2026-01-26 15:40:16,737 INFO ipython for doctype_name in doctypes_to_move:
+    if frappe.db.exists('DocType', doctype_name):
+        dt = frappe.get_doc('DocType', doctype_name)
+        old_module = dt.module
+        dt.module = 'Hiring Employee'
+        dt.save()
+        print(f"✓ {doctype_name}: Dipindahkan dari '{old_module}' ke 'Hiring Employee'")
+    else:
+        print(f"✗ {doctype_name}: Tidak ditemukan")
+        
+2026-01-26 15:40:16,737 INFO ipython exit;
+2026-01-26 15:40:16,737 INFO ipython === session end ===
+2026-01-27 09:35:47,112 INFO ipython === bench console session ===
+2026-01-27 09:35:47,113 INFO ipython import frappe
+2026-01-27 09:35:47,113 INFO ipython icon_data = {
+    "doctype": "Desktop Icon",
+    "module_name": "Hiring Employee",  # Must match your Module Def name
+    "label": "Hiring Employee",        # Name shown in sidebar
+    "icon": "users",                   # Frappe/Font Awesome icon (e.g., "users", "briefcase", "star")
+    "type": "Module",                  # Type is 'Module' for an app
+    "link": "#modules/Hiring Employee", # Link to your module
+    "reverse": 0,
+    "_user": "Administrator",          # Owner/Administrator sees it first
+    "force_show": 0,
+    "standard": 0,
+    "blocked": 0,
+    "hidden": 0,
+}
+2026-01-27 09:35:47,113 INFO ipython existing = frappe.db.exists("Desktop Icon", {
+    "module_name": "Hiring Employee",
+    "_user": "Administrator"
+})
+2026-01-27 09:35:47,113 INFO ipython if existing:
+    print(f"⚠️  Desktop Icon already exists with name: {existing}")
+    # If it exists but is hidden, let's unhide it
+    icon_doc = frappe.get_doc("Desktop Icon", existing)
+    if icon_doc.hidden:
+        icon_doc.hidden = 0
+        icon_doc.save()
+        print("✅ Unhid the existing Desktop Icon.")
+else:
+    # Create a new Desktop Icon
+    new_icon = frappe.get_doc(icon_data)
+    new_icon.insert(ignore_permissions=True)  # Insert with admin privileges
+    print("✅ Created new Desktop Icon for 'Hiring Employee'.")
+    
+2026-01-27 09:35:47,114 INFO ipython icon_data = {
+    "doctype": "Desktop Icon",
+    "module_name": "Hiring Employee",  # Must match your Module Def name
+    "label": "Hiring Employee",        # Name shown in sidebar
+    "icon": "users",                   # Frappe/Font Awesome icon (e.g., "users", "briefcase", "star")
+    "type": "module",                  # Type is 'Module' for an app
+    "link": "#modules/Hiring Employee", # Link to your module
+    "reverse": 0,
+    "_user": "Administrator",          # Owner/Administrator sees it first
+    "force_show": 0,
+    "standard": 0,
+    "blocked": 0,
+    "hidden": 0,
+}
+2026-01-27 09:35:47,114 INFO ipython if existing:
+    print(f"⚠️  Desktop Icon already exists with name: {existing}")
+    # If it exists but is hidden, let's unhide it
+    icon_doc = frappe.get_doc("Desktop Icon", existing)
+    if icon_doc.hidden:
+        icon_doc.hidden = 0
+        icon_doc.save()
+        print("✅ Unhid the existing Desktop Icon.")
+else:
+    # Create a new Desktop Icon
+    new_icon = frappe.get_doc(icon_data)
+    new_icon.insert(ignore_permissions=True)  # Insert with admin privileges
+    print("✅ Created new Desktop Icon for 'Hiring Employee'.")
+    
+2026-01-27 09:35:47,114 INFO ipython frappe.db.commit()
+2026-01-27 09:35:47,114 INFO ipython print("Please refresh your browser (Ctrl+F5 or Cmd+Shift+R).")
+2026-01-27 09:35:47,114 INFO ipython icons = frappe.get_all("Desktop Icon",
+    filters={"module_name": "Hiring Employee", "_user": "Administrator"},
+    fields=["name", "label", "hidden", "type"]
+)
+print(icons)
+2026-01-27 09:35:47,114 INFO ipython icons = frappe.get_all("Desktop Icon",
+    filters={"module_name": "Hiring Employee", "_user": "Administrator"},
+    fields=["name", "label", "hidden", "type"]
+)
+print(icons)
+2026-01-27 09:35:47,114 INFO ipython icon_data = {
+    "doctype": "Desktop Icon",
+    "module_name": "Hiring Employee",
+    "label": "Hiring Employee",
+    "icon": "users",
+    "type": "module",  # lowercase is correct
+    "link": "#modules/Hiring Employee",
+    "user": "Administrator",  # CORRECTED FIELD NAME: "user" not "_user"
+}
+2026-01-27 09:35:47,114 INFO ipython existing = frappe.db.exists("Desktop Icon", {
+    "module_name": "Hiring Employee",
+    "user": "Administrator"  # CORRECTED FIELD NAME
+})
+2026-01-27 09:35:47,114 INFO ipython if existing:
+    print(f"⚠️  Desktop Icon already exists with ID: {existing}")
+    icon_doc = frappe.get_doc("Desktop Icon", existing)
+    if icon_doc.hidden:
+        icon_doc.hidden = 0
+        icon_doc.save()
+        print("✅ Unhid the existing Desktop Icon.")
+else:
+    # Create a new Desktop Icon
+    new_icon = frappe.get_doc(icon_data)
+    new_icon.insert(ignore_permissions=True)
+    print("✅ Created new Desktop Icon for 'Hiring Employee'.")
+    
+2026-01-27 09:35:47,114 INFO ipython existing_icons = frappe.get_all("Desktop Icon",
+    filters={
+        "module_name": "Hiring Employee",
+        "owner": "Administrator"  # 'owner' is often the key field, not 'user'
+    },
+    fields=["name", "hidden", "blocked", "standard", "label"]
+)
+
+print(f"Found {len(existing_icons)} existing Desktop Icon(s):")
+2026-01-27 09:35:47,114 INFO ipython for icon in existing_icons:
+    print(f"  - Name: {icon['name']}, Hidden: {icon['hidden']}, Blocked: {icon['blocked']}, Standard: {icon['standard']}")
+    
+2026-01-27 09:35:47,114 INFO ipython if existing_icons:
+    for icon_info in existing_icons:
+        icon_doc = frappe.get_doc("Desktop Icon", icon_info["name"])
+        
+        # Check and fix its state
+        if icon_doc.hidden == 1:
+            icon_doc.hidden = 0
+            print(f"✅ Unhid icon: {icon_info['name']}")
+        
+        if icon_doc.blocked == 1:
+            icon_doc.blocked = 0
+            print(f"✅ Unblocked icon: {icon_info['name']}")
+        
+        icon_doc.save()
+    print("\n✅ Updated existing Desktop Icon(s).")
+else:
+    print("❌ No Desktop Icon found for 'Hiring Employee' owned by Administrator.")
+    
+2026-01-27 09:35:47,115 INFO ipython frappe.db.commit()
+2026-01-27 09:35:47,115 INFO ipython exit;
+2026-01-27 09:35:47,115 INFO ipython === session end ===
+2026-01-27 09:53:04,203 INFO ipython === bench console session ===
+2026-01-27 09:53:04,204 INFO ipython import frappe
+2026-01-27 09:53:04,204 INFO ipython print("🔍 COMPREHENSIVE MODULE VISIBILITY DIAGNOSTIC")
+2026-01-27 09:53:04,204 INFO ipython print("=" * 50)
+2026-01-27 09:53:04,204 INFO ipython print("\n1. Checking 'Module Def' record:")
+try:
+    module_doc = frappe.get_doc("Module Def", "Hiring Employee")
+    print(f"   ✅ Module Def Exists.")
+    print(f"      - App Name: {module_doc.app_name}")
+    print(f"      - Disabled: {module_doc.disabled} (MUST be 0)")
+    if module_doc.disabled:
+        print("      ⚠️  MODULE IS DISABLED! This will hide it for everyone.")
+except frappe.DoesNotExistError:
+    print("   ❌ CRITICAL: 'Module Def' record NOT FOUND.")
+    print("      The module has no system definition. It must be created.")
+    
+2026-01-27 09:53:04,204 INFO ipython try:
+    # Get the module document
+    module_doc = frappe.get_doc("Module Def", "Hiring Employee")
+    print(f"✅ Module Def 'Hiring Employee' exists.")
+    
+    # Print ALL fields and their values
+    print("\n📋 All fields in the document:")
+    for key, value in module_doc.as_dict().items():
+        if value is not None:  # Skip None values for cleaner output
+            print(f"   - {key}: {value}")
+    
+    # Check app_name specifically (MOST IMPORTANT)
+    print(f"\n🔑 Key field 'app_name': {module_doc.app_name}")
+    if module_doc.app_name != "hiring_employee":
+        print(f"   ⚠️  WARNING: app_name should be 'hiring_employee', not '{module_doc.app_name}'")
+    
+    # Check for any field that might control visibility
+    visibility_fields = ['enabled', 'active', 'visible', 'hidden', 'status', 'disabled']
+    found_fields = []
+    for field in visibility_fields:
+        if hasattr(module_doc, field):
+            found_fields.append(f"{field}: {getattr(module_doc, field)}")
+    
+    if found_fields:
+        print(f"\n👁️  Potential visibility fields: {', '.join(found_fields)}")
+    else:
+        print("\n👁️  No standard visibility fields found in this doctype.")
+        
+except frappe.DoesNotExistError:
+    print("❌ Module Def 'Hiring Employee' does not exist!")
+    print("This is likely the root cause. You may need to create it.")
+    
+2026-01-27 09:53:04,204 INFO ipython correct_icon_data = {
+    "doctype": "Desktop Icon",
+    "module_name": "Hiring Employee",
+    "label": "Hiring Employee",
+    "icon": "users",  # You can change this: "briefcase", "person", "star"
+    "type": "module",
+    "link": "modules/Hiring Employee",  # NOTE: Removed the leading '#'
+    "color": "#4F5D70",  # Optional: adds a color
+    "reverse": 0,
+    "force_show": 1,  # Important: Forces visibility
+    "standard": 1,    # CRITICAL: This makes it for ALL users
+    "blocked": 0,
+    "hidden": 0,
+}
+2026-01-27 09:53:04,204 INFO ipython existing_standard_icons = frappe.get_all("Desktop Icon",
+    filters={"module_name": "Hiring Employee", "standard": 1},
+    pluck="name"
+)
+2026-01-27 09:53:04,204 INFO ipython if existing_standard_icons:
+    print(f"Found {len(existing_standard_icons)} old standard icon(s). Removing...")
+    for icon_name in existing_standard_icons:
+        frappe.delete_doc("Desktop Icon", icon_name, force=True, ignore_permissions=True)
+        print(f"   Deleted: {icon_name}")
+    frappe.db.commit()
+    
+2026-01-27 09:53:04,205 INFO ipython try:
+    new_icon = frappe.get_doc(correct_icon_data)
+    new_icon.insert(ignore_permissions=True, ignore_if_duplicate=True)
+    frappe.db.commit()
+    print("✅ Created a new, correctly configured STANDARD Desktop Icon.")
+    print(f"   Name: {new_icon.name}")
+except Exception as e:
+    # If creation fails (e.g., still a duplicate), find and unhide it
+    print(f"Creation noted: {e}. Finding existing icon to verify...")
+    final_icon = frappe.get_last_doc("Desktop Icon", filters={"module_name": "Hiring Employee", "standard": 1})
+    if final_icon.hidden or final_icon.blocked:
+        final_icon.hidden = 0
+        final_icon.blocked = 0
+        final_icon.save()
+        print(f"✅ Ensured existing icon '{final_icon.name}' is visible and unblocked.")
+    frappe.db.commit()
+2026-01-27 09:53:04,205 INFO ipython exit;
+2026-01-27 09:53:04,205 INFO ipython === session end ===
+2026-01-27 10:09:58,822 INFO ipython === bench console session ===
+2026-01-27 10:09:58,823 INFO ipython import frappe
+from frappe.core.doctype.desktop_icon.desktop_icon import get_user_icons
+2026-01-27 10:09:58,823 INFO ipython import frappe
+2026-01-27 10:09:58,823 INFO ipython from frappe.core.doctype.desktop_icon.desktop_icon import get_user_icons
+2026-01-27 10:09:58,823 INFO ipython  icons = frappe.db.sql("""
+    SELECT name, owner, standard, hidden, blocked, label 
+    FROM `tabDesktop Icon` 
+    WHERE module_name = 'Hiring Employee'
+""", as_dict=True)
+2026-01-27 10:09:58,823 INFO ipython print(f"Found {len(icons)} Desktop Icon(s) for 'Hiring Employee':")
+2026-01-27 10:09:58,823 INFO ipython for icon in icons:
+    status = []
+    if icon.hidden: status.append("HIDDEN")
+    if icon.blocked: status.append("BLOCKED")
+    status_str = " - " + ", ".join(status) if status else " (Visible)"
+    print(f"  • {icon.label} - Owner: {icon.owner}, Standard: {icon.standard}{status_str}")
+    
+2026-01-27 10:09:58,823 INFO ipython exit;
+2026-01-27 10:09:58,823 INFO ipython === session end ===
+2026-01-27 10:31:42,102 INFO ipython === bench console session ===
+2026-01-27 10:31:42,103 INFO ipython import frappe
+2026-01-27 10:31:42,103 INFO ipython user_roles = {
+    "hiring.admin@company.com": ["Hiring Admin"],
+    "hr.interviewer@company.com": ["HR Interviewer"], 
+    "hr.manager@company.com": ["HR Manager"],
+    "Administrator": ["Hiring Admin", "HR Interviewer", "HR Manager"]  # Untuk testing semua
+}
+2026-01-27 10:31:42,103 INFO ipython for email, roles in user_roles.items():
+    if frappe.db.exists("User", email):
+        user = frappe.get_doc("User", email)
+        user.remove_roles()  # Hapus role lama
+        
+        for role in roles:
+            user.append("roles", {"role": role})
+        
+        user.save()
+        print(f"✓ {email}: {roles}")
+    else:
+        print(f"✗ User {email} tidak ditemukan")
+        
+2026-01-27 10:31:42,103 INFO ipython exit;
+2026-01-27 10:31:42,104 INFO ipython === session end ===
+2026-01-27 10:47:36,298 INFO ipython === bench console session ===
+2026-01-27 10:47:36,298 INFO ipython import frappe
+2026-01-27 10:47:36,298 INFO ipython users_data = [
+    {
+        "email": "hiring.admin@company.com",
+        "first_name": "Hiring",
+        "last_name": "Admin", 
+        "roles": ["Hiring Admin"]
+    },
+    {
+        "email": "hr.interviewer@company.com", 
+        "first_name": "HR",
+        "last_name": "Interviewer",
+        "roles": ["HR Interviewer"]
+    },
+    {
+        "email": "hr.manager@company.com",
+        "first_name": "HR",
+        "last_name": "Manager", 
+        "roles": ["HR Manager"]
+    }
+]
+2026-01-27 10:47:36,298 INFO ipython for user_info in users_data:
+    email = user_info["email"]
+    
+    # Cek jika user sudah ada
+    if frappe.db.exists("User", email):
+        print(f"⚠️  User {email} sudah ada. Melewati...")
+        continue
+    
+    print(f"📝 Membuat user: {email}")
+    
+    # Buat user baru
+    try:
+        user = frappe.get_doc({
+            "doctype": "User",
+            "email": email,
+            "first_name": user_info["first_name"],
+            "last_name": user_info["last_name"],
+            "enabled": 1,
+            "send_welcome_email": 0,  # Nonaktifkan email welcome
+            "roles": []
+        })
+        
+        # Insert user
+        user.insert(ignore_permissions=True)
+        
+        # Assign roles
+        for role in user_info["roles"]:
+            user.add_roles(role)
+            print(f"   ✅ Role '{role}' ditambahkan")
+        
+        # Set password default (untuk testing)
+        from frappe.utils import random_string
+        temp_password = "password123"  # Ganti dengan password yang aman
+        user.new_password = temp_password
+        user.save()
+        
+        print(f"✅ User {email} berhasil dibuat")
+        print(f"   Email: {email}")
+        print(f"   Password: {temp_password}")
+        print(f"   Roles: {', '.join(user_info['roles'])}")
+        print("-" * 50)
+        
+    except Exception as e:
+        print(f"❌ Gagal membuat user {email}: {str(e)}")
+
+frappe.db.commit()
+print("\n🎉 Semua user telah diproses!")
+2026-01-27 10:47:36,299 INFO ipython exit;
+2026-01-27 10:47:36,299 INFO ipython === session end ===
+2026-01-27 14:58:23,568 INFO ipython === bench console session ===
+2026-01-27 14:58:23,569 INFO ipython import frappe
+2026-01-27 14:58:23,569 INFO ipython hr_fields = frappe.get_meta("HR Interview").get_fieldnames()
+print("Field yang ada di HR Interview:")
+for field in sorted(hr_fields):
+    print(f"  - {field}")
+    
+2026-01-27 14:58:23,570 INFO ipython hr_fields = frappe.get_meta("HR Interview").get_fieldnames()
+print("Field yang ada di HR Interview:")
+for field in sorted(hr_fields):
+    print(f"  - {field}")
+    
+2026-01-27 14:58:23,570 INFO ipython meta = frappe.get_meta("HR Interview")
+print("📋 Field yang ada di HR Interview:")
+2026-01-27 14:58:23,570 INFO ipython for field in meta.fields:
+    print(f"  - {field.fieldname} ({field.fieldtype})")
+    
+2026-01-27 14:58:23,570 INFO ipython print("\n🔍 Cek field skor khusus:")
+for fieldname in ['technical_score', 'communication_score', 'attitude_score', 'overall_score']:
+    field = meta.get_field(fieldname)
+    if field:
+        print(f"  ✅ {fieldname}: ADA (type: {field.fieldtype})")
+    else:
+        print(f"  ❌ {fieldname}: TIDAK ADA")
+        
+2026-01-27 14:58:23,570 INFO ipython print("\n📊 Kolom di tabel database 'tabHR Interview':")
+columns = frappe.db.sql("DESC `tabHR Interview`")
+for col in columns[:10]:  # Tampilkan 10 kolom pertama
+    print(f"  - {col[0]} ({col[1]})")
+    
+2026-01-27 14:58:23,570 INFO ipython exit;
+2026-01-27 14:58:23,570 INFO ipython === session end ===
+2026-01-27 15:17:27,895 INFO ipython === bench console session ===
+2026-01-27 15:17:27,896 INFO ipython import frappe
+2026-01-27 15:17:27,896 INFO ipython users = frappe.get_all("Has Role",
+    filters={"role": "HR Interviewer", "parenttype": "User"},
+    fields=["parent"]
+)
+2026-01-27 15:17:27,896 INFO ipython print("Users dengan role 'HR Interviewer':")
+for user in users:
+    user_doc = frappe.get_doc("User", user.parent)
+    print(f"  - Email: {user_doc.name}")
+    print(f"    Name: {user_doc.full_name}")
+    print(f"    Enabled: {user_doc.enabled}")
+    print()
+    
+2026-01-27 15:17:27,896 INFO ipython exit;
+2026-01-27 15:17:27,896 INFO ipython === session end ===
+2026-01-27 15:28:22,683 INFO ipython === bench console session ===
+2026-01-27 15:28:22,684 INFO ipython import frappe
+2026-01-27 15:28:22,684 INFO ipython from frappe.utils import now_datetime
+2026-01-27 15:28:22,684 INFO ipython candidate = frappe.get_first_doc("Candidate", filters={"status": "Draft"})
+if candidate:
+    print(f"Membuat HR Interview untuk: {candidate.candidate_name}")
+    
+    # Cari user dengan role HR Interviewer
+    hr_users = frappe.get_all("Has Role",
+        filters={"role": "HR Interviewer", "parenttype": "User"},
+        fields=["parent"],
+        limit=1
+    )
+    
+    if hr_users:
+        interviewer = hr_users[0]["parent"]
+        
+        interview = frappe.get_doc({
+            "doctype": "HR Interview",
+            "candidate": candidate.name,
+            "candidate_name": candidate.candidate_name,
+            "position_applied": candidate.position_applied,
+            "interviewer": interviewer,  # PASTIKAN ini adalah EMAIL
+            "interview_date": now_datetime(),
+            "technical_score": 7,
+            "recommendation": "Proceed to Next Round"
+        })
+        
+        interview.insert()
+        frappe.db.commit()
+        
+        print(f"✅ HR Interview dibuat: {interview.name}")
+        print(f"   Interviewer: {interviewer}")
+        
+        # Update candidate status
+        candidate.db_set("status", "Interview HR")
+        print(f"✅ Candidate status diupdate ke: Interview HR")
+    else:
+        print("❌ Tidak ada user dengan role 'HR Interviewer'")
+else:
+    print("❌ Tidak ada candidate dengan status 'Draft'")
+    
+2026-01-27 15:28:22,684 INFO ipython candidates = frappe.get_all("Candidate", 
+    filters={"status": "Draft"}, 
+    fields=["name", "candidate_name", "position_applied"],
+    limit=1
+)
+2026-01-27 15:28:22,684 INFO ipython if candidates:
+    candidate = frappe.get_doc("Candidate", candidates[0].name)
+    print(f"🎯 Membuat HR Interview untuk: {candidate.candidate_name}")
+    
+    # Cari user dengan role HR Interviewer
+    hr_users = frappe.get_all("Has Role",
+        filters={"role": "HR Interviewer", "parenttype": "User"},
+        fields=["parent"],
+        limit=1
+    )
+    
+    if hr_users:
+        interviewer_email = hr_users[0]["parent"]
+        
+        # Dapatkan user document untuk verifikasi
+        interviewer_doc = frappe.get_doc("User", interviewer_email)
+        print(f"   Interviewer: {interviewer_email} ({interviewer_doc.full_name})")
+        print(f"   User enabled: {interviewer_doc.enabled}")
+        
+        # Buat HR Interview
+        interview = frappe.get_doc({
+            "doctype": "HR Interview",
+            "candidate": candidate.name,
+            "candidate_name": candidate.candidate_name,
+            "position_applied": candidate.position_applied,
+            "interviewer": interviewer_email,  # PASTIKAN ini EMAIL, bukan nama
+            "interview_date": now_datetime(),
+            "technical_score": 7,
+            "recommendation": "Proceed to Next Round"
+        })
+        
+        interview.insert()
+        frappe.db.commit()
+        
+        print(f"✅ HR Interview dibuat: {interview.name}")
+        
+        # Update candidate status
+        candidate.db_set("status", "Interview HR")
+        print(f"✅ Candidate status diupdate ke: Interview HR")
+        
+    else:
+        print("❌ Tidak ada user dengan role 'HR Interviewer'")
+        print("\n⚠️  SILAKAN BUAT USER DULU:")
+        print("1. Buka User List di Desk")
+        print("2. Buat user baru dengan email: hr.interviewer@company.com")
+        print("3. Assign role 'HR Interviewer' ke user tersebut")
+else:
+    print("❌ Tidak ada candidate dengan status 'Draft'")
+    print("\n⚠️  SILAKAN BUAT CANDIDATE DULU:")
+    print("1. Login sebagai Hiring Admin")
+    print("2. Buat Candidate baru")
+    print("3. Save - status akan otomatis 'Draft'")
+    
+2026-01-27 15:28:22,684 INFO ipython exit;
+2026-01-27 15:28:22,684 INFO ipython === session end ===
+2026-01-27 15:36:22,715 INFO ipython === bench console session ===
+2026-01-27 15:36:22,715 INFO ipython import frappe
+2026-01-27 15:36:22,715 INFO ipython users = frappe.get_all("Has Role",
+    filters={"role": "HR Interviewer", "parenttype": "User"},
+    fields=["parent"]
+)
+2026-01-27 15:36:22,715 INFO ipython if users:
+    for user in users:
+        email = user["parent"]
+        user_doc = frappe.get_doc("User", email)
+        print(f"✅ User ditemukan: {email}")
+        print(f"   Nama: {user_doc.full_name}")
+        print(f"   Enabled: {user_doc.enabled}")
+else:
+    print("❌ Tidak ada user dengan role HR Interviewer!")
+    print("   Buat dulu via Desk → User → New")
+    
+2026-01-27 15:36:22,716 INFO ipython from frappe.utils import now_datetime
+2026-01-27 15:36:22,716 INFO ipython candidates = frappe.get_all("Candidate", 
+    filters={"status": "Draft"},
+    fields=["name"],
+    limit=1
+)
+2026-01-27 15:36:22,716 INFO ipython if candidates:
+    candidate = frappe.get_doc("Candidate", candidates[0].name)
+    
+    # Cari user HR Interviewer
+    hr_users = frappe.get_all("Has Role",
+        filters={"role": "HR Interviewer", "parenttype": "User"},
+        fields=["parent"],
+        limit=1
+    )
+    
+    if hr_users:
+        interviewer = hr_users[0]["parent"]
+        
+        print(f"📝 Membuat HR Interview:")
+        print(f"   Candidate: {candidate.candidate_name}")
+        print(f"   Interviewer: {interviewer}")
+        
+        # Buat HR Interview
+        interview = frappe.get_doc({
+            "doctype": "HR Interview",
+            "candidate": candidate.name,
+            "candidate_name": candidate.candidate_name,
+            "interviewer": interviewer,  # Email user
+            "interview_date": now_datetime(),
+            "technical_score": 8,
+            "recommendation": "Proceed to Next Round"
+        })
+        
+        interview.insert()
+        frappe.db.commit()
+        
+        print(f"✅ Berhasil: {interview.name}")
+        print(f"✅ Status Candidate: {candidate.status} → Interview HR")
+    else:
+        print("❌ Tidak ada user HR Interviewer")
+else:
+    print("❌ Tidak ada candidate dengan status Draft")
+    
+2026-01-27 15:36:22,716 INFO ipython exit;
+2026-01-27 15:36:22,716 INFO ipython === session end ===
+2026-01-28 13:32:09,972 INFO ipython === bench console session ===
+2026-01-28 13:32:09,974 INFO ipython import frappe
+
+print("🔍 DIAGNOSIS 1: USER DENGAN ROLE 'HR Interviewer'")
+print("=" * 60)
+2026-01-28 13:32:09,974 INFO ipython users = frappe.get_all("Has Role",
+    filters={"role": "HR Interviewer", "parenttype": "User"},
+    fields=["parent"]
+)
+2026-01-28 13:32:09,974 INFO ipython if not users:
+    print("❌ TIDAK ADA USER dengan role 'HR Interviewer'!")
+    print("\n💡 SOLUSI: Buat user baru dengan EMAIL yang valid:")
+    print("   Email: hr.interviewer@company.com")
+    print("   Roles: HR Interviewer")
+    print("   Atau gunakan email yang sudah ada.")
+else:
+    print(f"✅ Ditemukan {len(users)} user:")
+    for i, user in enumerate(users, 1):
+        user_doc = frappe.get_doc("User", user.parent)
+        print(f"\n{i}. 📧 Email: {user_doc.name}")
+        print(f"   👤 Nama: {user_doc.full_name}")
+        print(f"   ✅ Enabled: {user_doc.enabled}")
+        print(f"   🏷️  Roles: {[r.role for r in user_doc.roles]}")
+        
+        # Cek apakah email mengandung "HR Interviewer" (ini yang salah!)
+        if "HR Interviewer" in user_doc.name:
+            print(f"   ⚠️  PERINGATAN: Email mengandung 'HR Interviewer'!")
+            print(f"      Ini SALAH! Email harus seperti 'nama@domain.com'")
+            
+2026-01-28 13:32:09,974 INFO ipython print("\n🔍 DIAGNOSIS 2: SESSION USER SAAT INI")
+print("=" * 60)
+print(f"Session user: '{frappe.session.user}'")
+print(f"User type: {type(frappe.session.user)}")
+print(f"Is valid user? {frappe.db.exists('User', frappe.session.user)}")
+2026-01-28 13:32:09,974 INFO ipython if frappe.session.user:
+    try:
+        user_doc = frappe.get_doc("User", frappe.session.user)
+        print(f"User full name: {user_doc.full_name}")
+        print(f"User enabled: {user_doc.enabled}")
+    except:
+        print(f"❌ ERROR: User '{frappe.session.user}' tidak valid!")
+        
+2026-01-28 13:32:09,974 INFO ipython print("\n🔍 DIAGNOSIS 3: DATA HR INTERVIEW YANG SUDAH ADA")
+print("=" * 60)
+
+interviews = frappe.get_all("HR Interview",
+    fields=["name", "interviewer", "candidate", "creation"],
+    limit=10
+)
+2026-01-28 13:32:09,974 INFO ipython if interviews:
+    print(f"Ditemukan {len(interviews)} HR Interview:")
+    for interview in interviews:
+        print(f"\n📋 {interview.name}")
+        print(f"   Interviewer: '{interview.interviewer}'")
+        
+        # Cek apakah valid
+        if frappe.db.exists("User", interview.interviewer):
+            user = frappe.get_doc("User", interview.interviewer)
+            print(f"   ✅ Valid user: {user.full_name} ({user.name})")
+        else:
+            print(f"   ❌ INVALID: '{interview.interviewer}' bukan user yang valid!")
+            print(f"      Perbaiki dengan: UPDATE `tabHR Interview` SET interviewer='EMAIL_YANG_VALID' WHERE name='{interview.name}'")
+else:
+    print("Belum ada HR Interview di database.")
+    
+2026-01-28 13:32:09,974 INFO ipython exit;
+2026-01-28 13:32:09,974 INFO ipython === session end ===
+2026-01-28 13:33:44,635 INFO ipython === bench console session ===
+2026-01-28 13:33:44,636 INFO ipython import frappe
+2026-01-28 13:33:44,636 INFO ipython sessions = frappe.cache().get_keys("session:*")
+print(f"Total active sessions: {len(sessions)}")
+2026-01-28 13:33:44,636 INFO ipython sessions = frappe.cache().get_keys("session:*")
+print(f"Total active sessions: {len(sessions)}")
+2026-01-28 13:33:44,636 INFO ipython active_users = []
+for key in sessions[:10]:  # Cek 10 pertama
+    try:
+        data = frappe.cache().get_value(key)
+        if data and 'user' in data:
+            active_users.append(data['user'])
+    except:
+        pass
+
+print(f"Active users in sessions: {set(active_users)}")
+2026-01-28 13:33:44,636 INFO ipython exit;
+2026-01-28 13:33:44,636 INFO ipython === session end ===
+2026-01-28 13:38:14,103 INFO ipython === bench console session ===
+2026-01-28 13:38:14,103 INFO ipython import frappe
+2026-01-28 13:38:14,103 INFO ipython sessions = frappe.cache().get_keys("session:*")
+print(f"Total active sessions: {len(sessions)}")
+2026-01-28 13:38:14,103 INFO ipython active_users = []
+for key in sessions[:10]:  # Cek 10 pertama
+    try:
+        data = frappe.cache().get_value(key)
+        if data and 'user' in data:
+            active_users.append(data['user'])
+    except:
+        pass
+
+print(f"Active users in sessions: {set(active_users)}")
+2026-01-28 13:38:14,103 INFO ipython print("\n=== USERS WITH ROLE 'HR Interviewer' ===")
+hr_users = frappe.get_all("Has Role",
+    filters={"role": "HR Interviewer", "parenttype": "User"},
+    fields=["parent"]
+)
+2026-01-28 13:38:14,103 INFO ipython for user in hr_users:
+    user_doc = frappe.get_doc("User", user.parent)
+    print(f"📧 {user_doc.name} - {user_doc.full_name}")
+    print(f"   Enabled: {user_doc.enabled}")
+    print(f"   Last login: {user_doc.last_login}")
+    print()
+
+# 4. Cek current session (jika ada web request)
+try:
+    print(f"Current session user: {frappe.session.user}")
+except:
+    print("No active web session in console")
+    
+2026-01-28 13:38:14,104 INFO ipython bad_users = frappe.get_all("User", 
+    filters={"name": ["like", "%HR Interviewer%"]},
+    fields=["name"]
+)
+2026-01-28 13:38:14,104 INFO ipython for user in bad_users:
+    print(f"Menghapus user salah: {user.name}")
+    frappe.delete_doc("User", user.name, force=True)
+    
+2026-01-28 13:38:14,104 INFO ipython user_data = {
+    "email": "hr.interviewer@company.com",
+    "first_name": "HR",
+    "last_name": "Interviewer",
+    "enabled": 1
+}
+2026-01-28 13:38:14,104 INFO ipython if not frappe.db.exists("User", user_data["email"]):
+    user = frappe.get_doc({
+        "doctype": "User",
+        **user_data,
+        "roles": [{"role": "HR Interviewer"}]
+    })
+    user.insert(ignore_permissions=True)
+    user.new_password = "password123"
+    user.save()
+    frappe.db.commit()
+    print(f"✅ User dibuat: {user_data['email']} / password123")
+else:
+    print(f"✅ User sudah ada: {user_data['email']}")
+    
+2026-01-28 13:38:14,104 INFO ipython exit;
+2026-01-28 13:38:14,104 INFO ipython === session end ===
+2026-01-28 13:46:37,628 INFO ipython === bench console session ===
+2026-01-28 13:46:37,629 INFO ipython import frappe
+2026-01-28 13:46:37,629 INFO ipython frappe.cache().delete_keys("session:*")
+frappe.cache().delete_keys("user:*")
+print("✅ Semua session di-clear")
+2026-01-28 13:46:37,629 INFO ipython exit;
+2026-01-28 13:46:37,630 INFO ipython === session end ===
+2026-01-28 13:53:19,795 INFO ipython === bench console session ===
+2026-01-28 13:53:19,796 INFO ipython import frappe
+2026-01-28 13:53:19,796 INFO ipython interviews = frappe.get_all("HR Interview",
+    fields=["name", "interviewer", "owner", "creation"],
+    filters={"interviewer": ["not like", "%@%"]}  # Yang tidak mengandung @
+)
+2026-01-28 13:53:19,796 INFO ipython interviews = frappe.get_all("HR Interview",
+    fields=["name", "interviewer", "owner", "creation"],
+    filters={"interviewer": ["not like", "%@%"]}  # Yang tidak mengandung @
+)
+
+if interviews:
+    print(f"❌ Ditemukan {len(interviews)} HR Interview dengan interviewer BUKAN email:")
+    for i in interviews:
+        print(f"   - {i.name}: interviewer='{i.interviewer}', owner='{i.owner}'")
+        
+        # Perbaiki: ganti dengan owner (email user yang membuat)
+        if "@" in i.owner:
+            frappe.db.set_value("HR Interview", i.name, "interviewer", i.owner)
+            print(f"     ✅ Diperbaiki: interviewer='{i.owner}'")
+        else:
+            # Cari user dengan role HR Interviewer
+            hr_users = frappe.get_all("Has Role",
+                filters={"role": "HR Interviewer", "parenttype": "User"},
+                fields=["parent"],
+                limit=1
+            )
+            if hr_users:
+                frappe.db.set_value("HR Interview", i.name, "interviewer", hr_users[0]["parent"])
+                print(f"     ✅ Diperbaiki: interviewer='{hr_users[0]["parent"]}'")
+    
+    frappe.db.commit()
+    print("\n✅ Semua data telah diperbaiki!")
+else:
+    print("✅ Tidak ada data yang rusak")
+2026-01-28 13:53:19,796 INFO ipython interviews = frappe.get_all("HR Interview",
+    fields=["name", "interviewer", "owner", "creation"],
+    filters={"interviewer": ["not like", "%@%"]}  # Yang tidak mengandung @
+)
+
+if interviews:
+    print(f"❌ Ditemukan {len(interviews)} HR Interview dengan interviewer BUKAN email:")
+    for i in interviews:
+        print(f"   - {i.name}: interviewer='{i.interviewer}', owner='{i.owner}'")
+        
+        # Perbaiki: ganti dengan owner (email user yang membuat)
+        if "@" in i.owner:
+            frappe.db.set_value("HR Interview", i.name, "interviewer", i.owner)
+            print(f"     ✅ Diperbaiki: interviewer='{i.owner}'")
+        else:
+            # Cari user dengan role HR Interviewer
+            hr_users = frappe.get_all("Has Role",
+                filters={"role": "HR Interviewer", "parenttype": "User"},
+                fields=["parent"],
+                limit=1
+            )
+            if hr_users:
+                frappe.db.set_value("HR Interview", i.name, "interviewer", hr_users[0]["parent"])
+                print(f"     ✅ Diperbaiki: interviewer='{hr_users[0]["parent"]}'")
+    
+    frappe.db.commit()
+    print("\n✅ Semua data telah diperbaiki!")
+else:
+    print("✅ Tidak ada data yang rusak")
+2026-01-28 13:53:19,796 INFO ipython interviews = frappe.get_all("HR Interview",
+    fields=["name", "interviewer", "owner", "creation"],
+    filters={"interviewer": ["not like", "%@%"]}  # Yang tidak mengandung @
+)
+
+if interviews:
+    print(f"❌ Ditemukan {len(interviews)} HR Interview dengan interviewer BUKAN email:")
+    for i in interviews:
+        print(f"   - {i.name}: interviewer='{i.interviewer}', owner='{i.owner}'")
+        
+        # Perbaiki: ganti dengan owner (email user yang membuat)
+        if "@" in i.owner:
+            frappe.db.set_value("HR Interview", i.name, "interviewer", i.owner)
+            print(f"     ✅ Diperbaiki: interviewer='{i.owner}'")
+        else:
+            # Cari user dengan role HR Interviewer
+            hr_users = frappe.get_all("Has Role",
+                filters={"role": "HR Interviewer", "parenttype": "User"},
+                fields=["parent"],
+                limit=1
+            )
+            if hr_users:
+                frappe.db.set_value("HR Interview", i.name, "interviewer", hr_users[0]["parent"])
+                print(f"     ✅ Diperbaiki: interviewer='{hr_users[0]}'")
+    
+    frappe.db.commit()
+    print("\n✅ Semua data telah diperbaiki!")
+else:
+    print("✅ Tidak ada data yang rusak")
+    
+2026-01-28 13:53:19,796 INFO ipython exit;
+2026-01-28 13:53:19,796 INFO ipython === session end ===
+2026-01-28 14:09:10,067 INFO ipython === bench console session ===
+2026-01-28 14:09:10,068 INFO ipython import frappe
+2026-01-28 14:09:10,068 INFO ipython last_interview = frappe.get_all("HR Interview",
+    fields=["name", "interviewer", "candidate"],
+    order_by="creation desc",
+    limit=1
+)
+2026-01-28 14:09:10,068 INFO ipython if last_interview:
+    print("=== HR INTERVIEW TERAKHIR ===")
+    for interview in last_interview:
+        print(f"Nama: {interview.name}")
+        print(f"Candidate: {interview.candidate}")
+        print(f"Interviewer: '{interview.interviewer}'")
+        
+        # Cek apakah valid
+        if frappe.db.exists("User", interview.interviewer):
+            user = frappe.get_doc("User", interview.interviewer)
+            print(f"✅ Valid user: {user.full_name}")
+        else:
+            print(f"❌ INVALID: '{interview.interviewer}' bukan email user yang valid!")
+            
+2026-01-28 14:09:10,068 INFO ipython === session end ===
+2026-01-30 10:35:03,057 INFO ipython === bench console session ===
+2026-01-30 10:35:03,058 INFO ipython frappe.db.sql("DELETE FROM `tabHR Manager Interview`")
+;
+2026-01-30 10:35:03,058 INFO ipython frappe.db.sql("DELETE FROM `tabHR Manager Interview`");
+2026-01-30 10:35:03,058 INFO ipython frappe.db.commit()
+2026-01-30 10:35:03,059 INFO ipython === session end ===
+2026-01-30 10:44:42,437 INFO ipython === bench console session ===
+2026-01-30 10:44:42,438 INFO ipython import frappe
+2026-01-30 10:44:42,438 INFO ipython data = frappe.db.sql("SELECT name, speaking, leadership_score FROM `tabHR Manager Interview`", as_dict=True)
+print(f"Found {len(data)} records")
+for d in data:
+    print(f"{d.name}: speaking={d.speaking}, type={type(d.speaking)}")
+    
+2026-01-30 10:44:42,438 INFO ipython frappe.db.sql("DELETE FROM `tabHR Manager Interview`")
+frappe.db.commit()
+print("Data cleared")
+2026-01-30 10:44:42,438 INFO ipython === session end ===
+2026-01-30 11:16:33,361 INFO ipython === bench console session ===
+2026-01-30 11:16:33,362 INFO ipython import frappe
+2026-01-30 11:16:33,362 INFO ipython columns = frappe.db.sql("DESCRIBE `tabHR Manager Interview`", as_dict=True)
+for col in columns:
+    print(f"{col['Field']}: {col['Type']}")
+    
+2026-01-30 11:16:33,362 INFO ipython doc = frappe.new_doc("HR Manager Interview")
+doc.candidate = "TEST-001"
+doc.interviewer = "Administrator"
+doc.speaking = 15
+doc.leadership_score = 16
+doc.culture_fit_score = 17
+doc.strategic_score = 18
+doc.insert()
+2026-01-30 11:16:33,362 INFO ipython doc = frappe.new_doc("HR Manager Interview")
+doc.candidate = "TEST-001"
+doc.interviewer = "Administrator"
+doc.interview_date = now_datetime()  # ⭐⭐⭐ TAMBAHKAN INI ⭐⭐⭐
+doc.speaking = 15
+doc.leadership_score = 16
+doc.culture_fit_score = 17
+doc.strategic_score = 18
+doc.insert()
+2026-01-30 11:16:33,362 INFO ipython from frappe.utils import now
+2026-01-30 11:16:33,362 INFO ipython candidate_name = "TEST-001"
+2026-01-30 11:16:33,362 INFO ipython if not frappe.db.exists("Candidate", candidate_name):
+    print(f"Creating candidate {candidate_name}...")
+    candidate = frappe.new_doc("Candidate")
+    candidate.candidate_name = "Test Candidate 001"
+    candidate.email = "test001@example.com"
+    candidate.phone_number = "1234567890"
+    candidate.position_applied = "Test Position"
+    candidate.status = "Interview HR Manager"
+    candidate.insert()
+    print(f"Created candidate: {candidate.name}")
+    
+2026-01-30 11:16:33,362 INFO ipython print("Creating HR Manager Interview...")
+doc = frappe.new_doc("HR Manager Interview")
+doc.candidate = candidate_name
+doc.interviewer = "Administrator"
+doc.interview_date = now()  # ⭐⭐⭐ INI YANG BENAR ⭐⭐⭐
+doc.speaking = 15
+doc.leadership_score = 16
+doc.culture_fit_score = 17
+doc.strategic_score = 18
+2026-01-30 11:16:33,362 INFO ipython try:
+    doc.insert()
+    print("✓ HR Manager Interview created successfully!")
+    print(f"  Document name: {doc.name}")
+    print(f"  Total score: {doc.total_score}")
+    print(f"  Status: {doc.status}")
+    
+    # Verifikasi data tersimpan
+    saved_doc = frappe.get_doc("HR Manager Interview", doc.name)
+    print(f"  Verified - Speaking: {saved_doc.speaking}")
+    print(f"  Verified - Leadership: {saved_doc.leadership_score}")
+    print(f"  Verified - Culture Fit: {saved_doc.culture_fit_score}")
+    print(f"  Verified - Strategic: {saved_doc.strategic_score}")
+    print(f"  Verified - Total: {saved_doc.total_score}")
+    
+except Exception as e:
+    print(f"✗ Error: {e}")
+    import traceback
+    traceback.print_exc()
+    
+2026-01-30 11:16:33,363 INFO ipython exit;
+2026-01-30 11:16:33,363 INFO ipython === session end ===
+2026-01-30 11:38:58,532 INFO ipython === bench console session ===
+2026-01-30 11:38:58,533 INFO ipython import frappe
+2026-01-30 11:38:58,533 INFO ipython hr_interviews = frappe.get_all('HR Interview', 
+                              fields=['name', 'technical_rating', 'technical_score'])
+2026-01-30 11:38:58,533 INFO ipython for doc in hr_interviews:
+    needs_update = False
+    update_fields = {}
+    
+    # Perbaiki technical_rating
+    if doc.technical_rating == 'NULL' or doc.technical_rating is None:
+        update_fields['technical_rating'] = 0
+        needs_update = True
+    elif isinstance(doc.technical_rating, str):
+        try:
+            update_fields['technical_rating'] = float(doc.technical_rating)
+            needs_update = True
+        except:
+            update_fields['technical_rating'] = 0
+            needs_update = True
+    
+2026-01-30 11:38:58,533 INFO ipython if doc.technical_score == 'NULL' or doc.technical_score is None:
+        # Hitung dari rating jika ada
+        rating = update_fields.get('technical_rating', doc.technical_rating)
+        if isinstance(rating, (int, float)):
+            update_fields['technical_score'] = rating * 4
+        else:
+            update_fields['technical_score'] = 0.0
+        needs_update = True
+    elif isinstance(doc.technical_score, str):
+        try:
+            update_fields['technical_score'] = float(doc.technical_score)
+            needs_update = True
+        except:
+            # Hitung dari rating
+            rating = update_fields.get('technical_rating', doc.technical_rating)
+            if isinstance(rating, (int, float)):
+                update_fields['technical_score'] = rating * 4
+            else:
+                update_fields['technical_score'] = 0.0
+            needs_update = True
+    
+    if needs_update:
+        print(f"Memperbaiki: {doc.name}")
+        print(f"  Rating: {doc.technical_rating} -> {update_fields.get('technical_rating', 'tidak berubah')}")
+        print(f"  Score: {doc.technical_score} -> {update_fields.get('technical_score', 'tidak berubah')}")
+        
+        frappe.db.set_value('HR Interview', doc.name, update_fields)
+2026-01-30 11:38:58,533 INFO ipython # Perbaiki technical_score
+    if doc.technical_score == 'NULL' or doc.technical_score is None:
+        # Hitung dari rating jika ada
+        rating = update_fields.get('technical_rating', doc.technical_rating)
+        if isinstance(rating, (int, float)):
+            update_fields['technical_score'] = rating * 4
+        else:
+            update_fields['technical_score'] = 0.0
+        needs_update = True
+    elif isinstance(doc.technical_score, str):
+        try:
+            update_fields['technical_score'] = float(doc.technical_score)
+            needs_update = True
+        except:
+            # Hitung dari rating
+            rating = update_fields.get('technical_rating', doc.technical_rating)
+            if isinstance(rating, (int, float)):
+                update_fields['technical_score'] = rating * 4
+            else:
+                update_fields['technical_score'] = 0.0
+            needs_update = True
+    
+    if needs_update:
+        print(f"Memperbaiki: {doc.name}")
+        print(f"  Rating: {doc.technical_rating} -> {update_fields.get('technical_rating', 'tidak berubah')}")
+        print(f"  Score: {doc.technical_score} -> {update_fields.get('technical_score', 'tidak berubah')}")
+        
+        frappe.db.set_value('HR Interview', doc.name, update_fields)
+2026-01-30 11:38:58,533 INFO ipython # Perbaiki technical_score
+    if doc.technical_score == 'NULL' or doc.technical_score is None:
+        # Hitung dari rating jika ada
+        rating = update_fields.get('technical_rating', doc.technical_rating)
+        if isinstance(rating, (int, float)):
+            update_fields['technical_score'] = rating * 4
+        else:
+            update_fields['technical_score'] = 0.0
+        needs_update = True
+    elif isinstance(doc.technical_score, str):
+        try:
+            update_fields['technical_score'] = float(doc.technical_score)
+            needs_update = True
+        except:
+            # Hitung dari rating
+            rating = update_fields.get('technical_rating', doc.technical_rating)
+            if isinstance(rating, (int, float)):
+                update_fields['technical_score'] = rating * 4
+            else:
+                update_fields['technical_score'] = 0.0
+            needs_update = True
+    
+    if needs_update:
+        print(f"Memperbaiki: {doc.name}")
+        print(f"  Rating: {doc.technical_rating} -> {update_fields.get('technical_rating', 'tidak berubah')}")
+        print(f"  Score: {doc.technical_score} -> {update_fields.get('technical_score', 'tidak berubah')}")
+        
+        frappe.db.set_value('HR Interview', doc.name, update_fields)
+2026-01-30 11:38:58,533 INFO ipython # Perbaiki technical_score
+    if doc.technical_score == 'NULL' or doc.technical_score is None:
+        # Hitung dari rating jika ada
+        rating = update_fields.get('technical_rating', doc.technical_rating)
+        if isinstance(rating, (int, float)):
+            update_fields['technical_score'] = rating * 4
+        else:
+            update_fields['technical_score'] = 0.0
+        needs_update = True
+    elif isinstance(doc.technical_score, str):
+        try:
+            update_fields['technical_score'] = float(doc.technical_score)
+            needs_update = True
+        except:
+            # Hitung dari rating
+            rating = update_fields.get('technical_rating', doc.technical_rating)
+            if isinstance(rating, (int, float)):
+                update_fields['technical_score'] = rating * 4
+            else:
+                update_fields['technical_score'] = 0.0
+            needs_update = True
+    
+    if needs_update:
+        print(f"Memperbaiki: {doc.name}")
+        print(f"  Rating: {doc.technical_rating} -> {update_fields.get('technical_rating', 'tidak berubah')}")
+        print(f"  Score: {doc.technical_score} -> {update_fields.get('technical_score', 'tidak berubah')}")
+        
+        frappe.db.set_value('HR Interview', doc.name, update_fields)
+2026-01-30 11:38:58,533 INFO ipython # Perbaiki technical_score
+
+    if doc.technical_score == 'NULL' or doc.technical_score is None:
+        # Hitung dari rating jika ada
+        rating = update_fields.get('technical_rating', doc.technical_rating)
+        if isinstance(rating, (int, float)):
+            update_fields['technical_score'] = rating * 4
+        else:
+            update_fields['technical_score'] = 0.0
+        needs_update = True
+    elif isinstance(doc.technical_score, str):
+        try:
+            update_fields['technical_score'] = float(doc.technical_score)
+            needs_update = True
+        except:
+            # Hitung dari rating
+            rating = update_fields.get('technical_rating', doc.technical_rating)
+            if isinstance(rating, (int, float)):
+                update_fields['technical_score'] = rating * 4
+            else:
+                update_fields['technical_score'] = 0.0
+            needs_update = True
+    
+    if needs_update:
+        print(f"Memperbaiki: {doc.name}")
+        print(f"  Rating: {doc.technical_rating} -> {update_fields.get('technical_rating', 'tidak berubah')}")
+        print(f"  Score: {doc.technical_score} -> {update_fields.get('technical_score', 'tidak berubah')}")
+        
+        frappe.db.set_value('HR Interview', doc.name, update_fields)
+2026-01-30 11:38:58,533 INFO ipython # Perbaiki technical_score
+
+    if doc.technical_score == 'NULL' or doc.technical_score is None:
+        # Hitung dari rating jika ada
+        rating = update_fields.get('technical_rating', doc.technical_rating)
+        if isinstance(rating, (int, float)):
+            update_fields['technical_score'] = rating * 4
+        else:
+            update_fields['technical_score'] = 0.0
+        needs_update = True
+    elif isinstance(doc.technical_score, str):
+        try:
+            update_fields['technical_score'] = float(doc.technical_score)
+            needs_update = True
+        except:
+            # Hitung dari rating
+            rating = update_fields.get('technical_rating', doc.technical_rating)
+            if isinstance(rating, (int, float)):
+                update_fields['technical_score'] = rating * 4
+            else:
+                update_fields['technical_score'] = 0.0
+            needs_update = True
+    
+    if needs_update:
+        print(f"Memperbaiki: {doc.name}")
+        print(f"  Rating: {doc.technical_rating} -> {update_fields.get('technical_rating', 'tidak berubah')}")
+        print(f"  Score: {doc.technical_score} -> {update_fields.get('technical_score', 'tidak berubah')}")
+        
+        frappe.db.set_value('HR Interview', doc.name, update_fields)
+2026-01-30 11:38:58,533 INFO ipython exit;
+2026-01-30 11:38:58,533 INFO ipython === session end ===
+2026-01-30 13:58:24,789 INFO ipython === bench console session ===
+2026-01-30 13:58:24,790 INFO ipython import frappe
+
+print("=== Membersihkan Data HR Interview ===")
+
+# 1. Periksa dan perbaiki data technical_rating
+hr_interviews = frappe.get_all('HR Interview', 
+                              fields=['name', 'technical_rating', 'technical_score'])
+
+for doc in hr_interviews:
+    needs_update = False
+    update_fields = {}
+    
+    # Perbaiki technical_rating
+    if doc.technical_rating == 'NULL' or doc.technical_rating is None:
+        update_fields['technical_rating'] = 0
+        needs_update = True
+    elif isinstance(doc.technical_rating, str):
+        try:
+            update_fields['technical_rating'] = float(doc.technical_rating)
+            needs_update = True
+        except:
+            update_fields['technical_rating'] = 0
+            needs_update = True
+    
+    # Perbaiki technical_score
+    if doc.technical_score == 'NULL' or doc.technical_score is None:
+        # Hitung dari rating jika ada
+        rating = update_fields.get('technical_rating', doc.technical_rating)
+        if isinstance(rating, (int, float)):
+            update_fields['technical_score'] = rating * 4
+        else:
+            update_fields['technical_score'] = 0.0
+        needs_update = True
+    elif isinstance(doc.technical_score, str):
+        try:
+            update_fields['technical_score'] = float(doc.technical_score)
+            needs_update = True
+        except:
+            # Hitung dari rating
+            rating = update_fields.get('technical_rating', doc.technical_rating)
+            if isinstance(rating, (int, float)):
+                update_fields['technical_score'] = rating * 4
+            else:
+                update_fields['technical_score'] = 0.0
+            needs_update = True
+    
+    if needs_update:
+        print(f"Memperbaiki: {doc.name}")
+        print(f"  Rating: {doc.technical_rating} -> {update_fields.get('technical_rating', 'tidak berubah')}")
+        print(f"  Score: {doc.technical_score} -> {update_fields.get('technical_score', 'tidak berubah')}")
+        
+        frappe.db.set_value('HR Interview', doc.name, update_fields)
+
+# 2. Perbaiki data HR Manager Interview
+print("\n=== Membersihkan Data HR Manager Interview ===")
+
+hr_manager_fields = ['speaking', 'leadership_score', 'culture_fit_score', 'strategic_score', 'total_score']
+hr_manager_interviews = frappe.get_all('HR Manager Interview', fields=['name'] + hr_manager_fields)
+
+for doc in hr_manager_interviews:
+    needs_update = False
+    update_fields = {}
+    
+    for field in hr_manager_fields:
+        value = doc.get(field)
+        if value == 'NULL' or value is None:
+            update_fields[field] = 0.0
+            needs_update = True
+        elif isinstance(value, str):
+            try:
+                update_fields[field] = float(value)
+                needs_update = True
+            except:
+                update_fields[field] = 0.0
+                needs_update = True
+    
+    # Hitung ulang total_score jika ada perubahan
+    if any(f in update_fields for f in ['speaking', 'leadership_score', 'culture_fit_score', 'strategic_score']):
+        speaking = update_fields.get('speaking', doc.speaking or 0)
+        leadership = update_fields.get('leadership_score', doc.leadership_score or 0)
+        culture = update_fields.get('culture_fit_score', doc.culture_fit_score or 0)
+        strategic = update_fields.get('strategic_score', doc.strategic_score or 0)
+        
+        update_fields['total_score'] = float(speaking + leadership + culture + strategic)
+        needs_update = True
+    
+    if needs_update:
+        print(f"Memperbaiki: {doc.name}")
+        frappe.db.set_value('HR Manager Interview', doc.name, update_fields)
+
+frappe.db.commit()
+print("\n✅ Data berhasil dibersihkan!")
+2026-01-30 13:58:24,790 INFO ipython exit;
+2026-01-30 13:58:24,790 INFO ipython === session end ===
+2026-01-30 14:22:05,750 INFO ipython === bench console session ===
+2026-01-30 14:22:05,750 INFO ipython import frappe
+
+# List tabel yang akan di-drop
+tables_to_drop = [
+    "tabHR Interview",
+    "tabHR Manager Interview",
+    "tabCandidate"  # Jika mau drop semua
+]
+
+for table in tables_to_drop:
+    try:
+        frappe.db.sql(f"DROP TABLE IF EXISTS `{table}`")
+        print(f"✅ Tabel {table} berhasil di-drop")
+    except Exception as e:
+        print(f"❌ Gagal drop {table}: {str(e)}")
+
+frappe.db.commit()
+print("Semua tabel berhasil di-drop")
+2026-01-30 14:22:05,750 INFO ipython exit;
+2026-01-30 14:22:05,750 INFO ipython === session end ===
+2026-01-30 14:36:28,556 INFO ipython === bench console session ===
+2026-01-30 14:36:28,557 INFO ipython import frappe
+
+# Try to create a test Candidate document
+test_candidate = frappe.new_doc("Candidate")
+test_candidate.candidate_name = "Test Name"
+test_candidate.email = "test@example.com"
+test_candidate.phone_number = "081234567890"
+test_candidate.position_applied = "Test Position"
+test_candidate.insert()
+
+print(f"✅ Test document created successfully: {test_candidate.name}")
+frappe.db.commit()
+2026-01-30 14:36:28,557 INFO ipython === session end ===
+2026-01-30 14:46:42,977 INFO ipython === bench console session ===
+2026-01-30 14:46:42,978 INFO ipython import frappe
+
+users = [
+    {
+        "email": "hiring.admin@company.com",
+        "first_name": "Hiring",
+        "last_name": "Admin",
+        "roles": ["Hiring Admin"]
+    },
+    {
+        "email": "hr.interviewer@company.com",
+        "first_name": "HR",
+        "last_name": "Interviewer",
+        "roles": ["HR Interviewer"]
+    },
+    {
+        "email": "hr.manager@company.com",
+        "first_name": "HR",
+        "last_name": "Manager",
+        "roles": ["HR Manager Interviewer"]
+    }
+]
+2026-01-30 14:46:42,978 INFO ipython 
+for user_data in users:
+    email = user_data["email"]
+    
+    # Cek apakah user sudah ada
+    if not frappe.db.exists("User", email):
+        # Buat user baru
+        user = frappe.new_doc("User")
+        user.email = email
+        user.first_name = user_data["first_name"]
+        user.last_name = user_data["last_name"]
+        user.new_password = "1234Password1234"
+        user.send_welcome_email = 0  # Nonaktifkan email selamat datang
+        user.insert(ignore_permissions=True)
+        print(f"✅ User {email} created.")
+    else:
+        user = frappe.get_doc("User", email)
+        print(f"ℹ️ User {email} already exists. Updating...")
+    
+    # Tambahkan role ke user
+    for role_name in user_data["roles"]:
+        if not any(d.role == role_name for d in user.get("roles")):
+            user.append("roles", {"role": role_name})
+    
+    user.save(ignore_permissions=True)
+    print(f"   Roles assigned: {user_data['roles']}")
+
+frappe.db.commit()
+print("\n🎉 Semua user telah selesai diproses.")
+2026-01-30 14:46:42,978 INFO ipython === session end ===
+2026-01-30 14:47:31,954 INFO ipython === bench console session ===
+2026-01-30 14:47:31,954 INFO ipython import frappe
+
+# Role yang diperlukan berdasarkan file JSON permissionsmu
+roles_needed = ["Hiring Admin", "HR Interviewer", "HR Manager"]
+
+for role_name in roles_needed:
+    # Cek apakah role sudah ada
+    if not frappe.db.exists("Role", role_name):
+        role = frappe.new_doc("Role")
+        role.role_name = role_name
+        role.save(ignore_permissions=True)
+        print(f"✅ Role created: {role_name}")
+    else:
+        print(f"ℹ️ Role already exists: {role_name}")
+
+frappe.db.commit()
+print("\n🎉 Semua role siap.")
+2026-01-30 14:47:31,954 INFO ipython email = "hr.manager@company.com"
+
+if frappe.db.exists("User", email):
+    user = frappe.get_doc("User", email)
+    
+    # 1. HAPUS role yang salah ('HR Manager Interviewer') jika ada
+    user.set("roles", [])
+    user.save(ignore_permissions=True)
+    print(f"1. Cleared old roles for {email}")
+    
+    # 2. TAMBAHKAN role yang benar ('HR Manager')
+    user.append("roles", {"role": "HR Manager"})
+    user.save(ignore_permissions=True)
+    print(f"2. Assigned correct role 'HR Manager' to {email}")
+    
+else:
+    # Jika user belum ada, buat baru
+    print(f"⚠️ User {email} tidak ditemukan. Membuat baru...")
+    user = frappe.new_doc("User")
+    user.email = email
+    user.first_name = "HR"
+    user.last_name = "Manager"
+    user.new_password = "1234Password1234"
+    user.send_welcome_email = 0
+    user.append("roles", {"role": "HR Manager"})
+    user.insert(ignore_permissions=True)
+    print(f"✅ User {email} created with role 'HR Manager'")
+
+frappe.db.commit()
+print("\n✅ User HR Manager telah diperbaiki.")
+2026-01-30 14:47:31,955 INFO ipython exit;
+2026-01-30 14:47:31,955 INFO ipython === session end ===
+2026-01-30 14:52:05,733 INFO ipython === bench console session ===
+2026-01-30 14:52:05,733 INFO ipython import frappe
+
+# Daftar user yang akan dibuat/diperbarui
+users_to_create = [
+    {
+        "email": "hiring.admin@company.com",
+        "first_name": "Hiring",
+        "last_name": "Admin",
+        "roles": ["Hiring Admin"]
+    },
+    {
+        "email": "hr.interviewer@company.com", 
+        "first_name": "HR",
+        "last_name": "Interviewer",
+        "roles": ["HR Interviewer"]
+    }
+]
+
+print("=== MEMBUAT/UPDATE USER HIRING ADMIN & HR INTERVIEWER ===")
+
+for user_data in users_to_create:
+    email = user_data["email"]
+    
+    # Cek apakah user sudah ada
+    if not frappe.db.exists("User", email):
+        # Buat user baru
+        user = frappe.new_doc("User")
+        user.email = email
+        user.first_name = user_data["first_name"]
+        user.last_name = user_data["last_name"]
+        user.new_password = "1234Password1234"
+        user.send_welcome_email = 0  # Nonaktifkan email selamat datang
+        user.insert(ignore_permissions=True)
+        print(f"✅ User DIBUAT: {email}")
+    else:
+        user = frappe.get_doc("User", email)
+        print(f"ℹ️ User SUDAH ADA: {email}. Memperbarui...")
+    
+    # Pastikan role yang benar ditambahkan
+    current_roles = [d.role for d in user.get("roles")]
+    
+    for role_name in user_data["roles"]:
+        if role_name not in current_roles:
+            user.append("roles", {"role": role_name})
+            print(f"   + Role ditambahkan: {role_name}")
+    
+    user.save(ignore_permissions=True)
+
+frappe.db.commit()
+print("\n🎉 PROSES SELESAI!")
+print("User yang telah diproses:")
+print("1. hiring.admin@company.com (Role: Hiring Admin)")
+print("2. hr.interviewer@company.com (Role: HR Interviewer)")
+print("\nPassword untuk login: 1234Password1234")
+2026-01-30 14:52:05,734 INFO ipython === session end ===
+2026-01-31 19:07:09,278 INFO ipython === bench console session ===
+2026-01-31 19:07:09,279 INFO ipython # File: migrate_hr_interviews.py
+import frappe
+
+def submit_all_hr_interviews():
+    """Submit semua HR Interview yang masih draft dan sudah ada data minimal"""
+    try:
+        # Cari semua HR Interview yang masih draft
+        draft_interviews = frappe.get_all(
+            "HR Interview",
+            filters={"docstatus": 0},
+            fields=["name", "candidate", "technical_score", "recommendation"]
+        )
+        
+        submitted_count = 0
+        failed_count = 0
+        
+        for interview in draft_interviews:
+            try:
+                doc = frappe.get_doc("HR Interview", interview.name)
+                
+                # Skip jika data belum lengkap
+                if doc.technical_score is None or not doc.recommendation:
+                    continue
+                
+                # Submit dokumen
+                doc.submit()
+                submitted_count += 1
+                
+                # Update candidate status jika masih Interview HR
+                if doc.candidate:
+                    candidate_status = frappe.db.get_value("Candidate", doc.candidate, "status")
+                    if candidate_status == "Interview HR":
+                        frappe.db.set_value("Candidate", doc.candidate, "status", "Interview HR Manager")
+                
+                frappe.db.commit()
+                
+            except Exception as e:
+                failed_count += 1
+                frappe.log_error(f"Failed to submit HR Interview {interview.name}: {str(e)}", "Migration")
+                continue
+        
+        frappe.msgprint(f"Migration completed:<br>"
+                       f"Successfully submitted: {submitted_count}<br>"
+                       f"Failed: {failed_count}<br>"
+                       f"Total processed: {len(draft_interviews)}")
+        
+    except Exception as e:
+        frappe.log_error(f"Migration error: {str(e)}", "Migration")
+        frappe.throw(f"Migration failed: {str(e)}")
+
+# Untuk menjalankan di bench console:
+# bench execute hiring_employee.hiring_employee.doctype.candidate.migrate_hr_interviews.submit_all_hr_interviews
+2026-01-31 19:07:09,279 INFO ipython exit;
+2026-01-31 19:07:09,279 INFO ipython === session end ===
+2026-01-31 21:09:13,529 INFO ipython === bench console session ===
+2026-01-31 21:09:13,530 INFO ipython try:
+    import hiring_employee.hiring_employee.hiring_employee.doctype.hr_manager_interview.hr_manager_interview as module1
+    print("Path 3 level berhasil:", module1)
+except ImportError as e:
+    print("Path 3 level gagal:", e)
+    
+2026-01-31 21:09:13,530 INFO ipython try:
+    import hiring_employee.hiring_employee.doctype.hr_manager_interview.hr_manager_interview as module2
+    print("Path 2 level berhasil:", module2)
+except ImportError as e:
+    print("Path 2 level gagal:", e)
+    
+2026-01-31 21:09:13,530 INFO ipython exit;
+2026-01-31 21:09:13,530 INFO ipython === session end ===
